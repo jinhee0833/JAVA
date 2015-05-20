@@ -1,0 +1,10 @@
+package net.hb.day15;
+
+public class Three {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+}
