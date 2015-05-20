@@ -20,15 +20,19 @@ public class Three {
 		DataInputStream dis = new DataInputStream(is);
 		
 		String path="C:\\Mtest\\gugudan.txt";
-		File file = null;
-		PrintWriter pw = null;
+		File file = new File(path);
+		PrintWriter pw = new PrintWriter(file);
 		
 		int dan=0;
 		System.out.println("br 단입력? ");
 //		dan=Integer.parseInt(br.readLine());
 		dan = Integer.parseInt(dis.readLine());
-		for(int i=1;i<10;i++)
+		for(int i=1;i<10;i++){
 			System.out.println(dan+"*"+i+"="+(dan*i));
+			pw.println(dan+"*"+i+"="+(dan*i));
+		}
+			System.out.println("저장 성공");
+			pw.close();
 			sc.close();
 		}catch(Exception ex){
 			
