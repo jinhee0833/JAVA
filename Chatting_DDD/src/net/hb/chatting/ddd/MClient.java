@@ -181,7 +181,7 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 	public void exit() {
 		try {
 			out.write(("/q" + tf_name.getText() + "\n").getBytes());
-			System.out.println("보냄 : " + tf_name.getText());
+			System.out.println("sender : " + tf_name.getText());
 			ta_out.append("****" + tf_name.getText() + "님이 퇴장하셨습니다****\r\n");
 			in.close();
 			out.close();
@@ -251,11 +251,11 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 		}
 	}// end
 
-	public void showMsg(int i_Text, String msg, String ipAdress)
+	public void showMsg(int i_Text, String msg, String ipAdress, String sender)
 			throws Exception {
 
 		System.out.println("in showMSg");
-		System.out.println("ip adress" + ipAdress);
+		System.out.println("ip adress : " + ipAdress);
 		String str = msg;
 		int lineMaxCnt = 15;
 		int colMaxNum = (int) str.length() / lineMaxCnt;
@@ -266,20 +266,21 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 		String lastLineStr = null;
 		StringBuilder lastmodifyStr = null;
 		InetAddress selfIP = InetAddress.getLocalHost();
-		if ((selfIP.getHostAddress().equals(ipAdress))) { // != left side == rigth
+		if (!(selfIP.getHostAddress().equals(ipAdress))) { // != left side == rigth
 			// side
 			// align left version
 			// *****************
 
 			// show msg not include lastline msg
 
-			v.get(i_Text).append(tf_name.getText() + "\n");
+			v.get(i_Text).append(sender + "\n");
 			while (true) {
+				System.out.println("showMsg : while");
 				modifyStr = new StringBuilder(spaceStr);
 				modifyStr.append(str.substring(idx,
 						Math.min(str.length(), (idx + lineMaxCnt))));
 				System.out.println(modifyStr.toString());
-
+				// v.get(i_Text).append(modifyStr.toString() + "\n");
 				idx += 10;
 				if (idx + lineMaxCnt > str.length()) {
 					break;
@@ -352,54 +353,42 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 
 			try {
 				String msg = in.readLine();
-				System.out.println("서버로부터 읽음 : " + msg);
+				System.out.println("get msg from server : " + msg);
+
+				// for (int i = 0; i < 20; i++) {
+				// System.out.println(((java.util.List<JTextArea>) list).get(i));
+				//
+				// }
+				if (msg.charAt(0) == '/') {
+					if (msg.charAt(1) == 'c') {
+						if (!(NameList.containsKey(msg.substring(2)))) {
+							list.replaceItem(msg.substring(2), count);
+
+							count++;
+							NameList.put(msg.substring(2), isCreatedTab);
+						}
+						
+					}
+				}
+				System.out.println("before i : ");
 				int i = jtp.getSelectedIndex();
-//				 v.get(i).append("****" + msg.substring(2) + "님이 입장하셨습니다****\r\n");
-				
+				System.out.println("after i : ");
+				// v.get(i).append("****" + msg.substring(2) + "님이 입장하셨습니다****\r\n");
+				// tf_name.setEnabled(false); // 대화명 label 비활성
+				jb_join.setEnabled(false);
+				receivedStr = msg.split("::");
+				System.out.println("receivedStr[1]" + receivedStr[1]);
+				System.out.println("receivedStr[0]" + receivedStr[0]);
+				showMsg(i, receivedStr[1], receivedStr[0], receivedStr[2]);// tab idx ,
+																																		// str
+				// System.out.println("111");
 
 				if (msg == null) {
+					NameList.put(msg.substring(2), isCreatedTab);
+
+					return;
 				}
-				//
-				
-				if(msg.charAt(0)=='/'){
-					if(msg.charAt(1)=='c'){ //c, s, 이런건 서버에서 설정해주는거임 	 
-						list.replaceItem(msg.substring(2), count); //list에 msg.substring(2)값을 넣고, list index자리 지정
-						NameList.put(msg.substring(2), isCreatedTab);
-						count++;
-						
-//						num.setText(String.valueOf(count)); //인원 수 변경
-						
-						ta_out.append("****"+msg.substring(2)+"님이 입장하셨습니다****\r\n"); //모든 클라이언트에게 입장을 알림 
-						tf_name.setEnabled(false); // 대화명 label 비활성
-						
-						receivedStr = msg.split("::");
-						System.out.println("receivedStr[1]" + receivedStr[1]);
-						System.out.println("receivedStr[0]" + receivedStr[0]);
-						showMsg(i,receivedStr[1],receivedStr[0] );// tab idx , str
-						
-						tf_name.setEnabled(false); //대화명 label 비활성
-						jb_join.setEnabled(false); //접속버튼 비활성      
-					}
-					
-					else if(msg.charAt(1)=='q'){ //나가기버튼 누르거나 /q를 입력하면 서버에 q가 입력이 돼. 왜 그렇게 되지? 퇴장
-						String str=msg.substring(2);
-						ta_out.append("****"+str+"님이 퇴장하셨습니다****\r\n");
-						for(int k=0;k<list.getItemCount();k++){ //list목록에서 퇴장하는 대화명찾아 돌려서 remove
-							if(str.equals(list.getItem(k))){
-								list.remove(k);
-								count--;
-								
-								break;
-							}
-						}
-						//return;    얘 때문에 누군가가 퇴장을 하면 내 메시지가 서버로만 가고 클라이언트로 안 뿌려줌...
-					}
-				
-				
-				}
-				
-				
-				//
+				count++;
 			} catch (Exception e) {
 				ta_out.append(e.getMessage());
 			}
@@ -456,10 +445,10 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 			}
 
 			selfIP = InetAddress.getLocalHost();
-			String userName = tf_name.getName();
+			String userName = tf_name.getText();
 
 			System.out.println("send process: " + selfIP.getHostAddress());
-			str = selfIP.getHostAddress() + "::" + str;
+			str = selfIP.getHostAddress() + "::" + str + "::" + userName;
 
 			int i = jtp.getSelectedIndex();
 
@@ -469,7 +458,7 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 			ss = now.get(now.SECOND);
 			time = hh + ":" + mm + ":" + ss;
 
-//			v.get(i).append(tf_msg.getText() + "\n");
+			// v.get(i).append(tf_msg.getText() + "\n");
 			tf_msg.setText("");
 			tf_msg.requestFocus();
 
@@ -479,7 +468,7 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 
 		System.out.println("before send msg : " + str);
 		PrintWriter pw = new PrintWriter(out, true);
-		pw.println("/c"+str); // send to server msg
+		pw.println(str); // send to server msg
 
 		// showMsg(i, str, time);
 		tf_msg.setText("");
@@ -500,11 +489,12 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 			soc = new Socket("203.236.209.120", 8000); // 소켓지정
 			in = new BufferedReader(new InputStreamReader(soc.getInputStream()));
 			out = soc.getOutputStream(); // 서버로 보냄
-			out.write((tf_name.getText() + "\n").getBytes()); // 접속자 대화명을 바이트로해서 서버에
-																												// 보냄
-			System.out.println("서버로 보냄 >> " + tf_name.getText());
-			tf_name.setEnabled(false);
-			jb_join.setEnabled(false);
+			out.write(("/c" + tf_name.getText() + "\n").getBytes()); // 접속자 대화명을
+																																// 바이트로해서 서버에
+			// 보냄
+			System.out.println("send to server >> " + tf_name.getText());
+			// tf_name.setEnabled(false);
+			// jb_join.setEnabled(false);
 			new Thread(this).start(); // 다른 클라이언트들의 메시지를 서버로부터 가져옴
 			tf_msg.requestFocus();
 		} catch (Exception e) {
