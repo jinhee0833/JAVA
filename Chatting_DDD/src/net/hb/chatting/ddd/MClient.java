@@ -134,7 +134,8 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 				
 
 				if (ae.getClickCount() == 2) {
-
+					nick = list.getSelectedItem().toString();
+							
 					if (!(NameList.get(nick))) { // New Create
 						v.add(new TextArea());
 						jtp.addTab(nick, new JPanel().add(v.get(num)));
@@ -267,6 +268,15 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 		String lastLineStr = null;
 		StringBuilder lastmodifyStr = null;
 		InetAddress selfIP = InetAddress.getLocalHost();
+		if(NameList.get(sender)==true){
+			jtp.setSelectedIndex(jtp.indexOfTab(sender));
+		}else{
+			jtp.addTab(sender,new JPanel().add(v.get(num)) );
+			num++;
+			isCreatedTab = true;
+			NameList.put(nick, isCreatedTab);
+			jtp.setSelectedIndex(jtp.indexOfTab(sender));
+		}
 		if (!(selfIP.getHostAddress().equals(ipAdress))) { // != left side == rigth
 			// side
 			// align left version
@@ -377,8 +387,7 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 				if (msg.charAt(0) == '/') {
 					if (msg.charAt(1) == 'c') {
 						if (!(NameList.containsKey(msg.substring(2)))) {
-							list.replaceItem(msg.substring(2), count);
-							nick = list.getSelectedItem().toString();
+							list.replaceItem(msg.substring(2), count);	
 							count++;
 							NameList.put(msg.substring(2), isCreatedTab);
 						}
@@ -392,7 +401,7 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 				// tf_name.setEnabled(false); // 대화명 label 비활성
 				jb_join.setEnabled(false);
 				receivedStr = msg.split("::");
-				System.out.println("receivedStr[3]" + receivedStr[3]);
+//				System.out.println("receivedStr[3]" + receivedStr[3]);
 				System.out.println("receivedStr[2]" + receivedStr[2]);
 				System.out.println("receivedStr[1]" + receivedStr[1]);
 				System.out.println("receivedStr[0]" + receivedStr[0]);
@@ -465,7 +474,7 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 			String userName = tf_name.getText();
 
 			System.out.println("send process: " + selfIP.getHostAddress());
-			str = selfIP.getHostAddress() + "::" + str + "::" + userName+ "::" + jtp.getTitleAt(jtp.indexOfTab(nick));
+			str = selfIP.getHostAddress() + "::" + str + "::" + userName;
 
 			int i = jtp.getSelectedIndex();
 
