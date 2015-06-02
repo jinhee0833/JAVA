@@ -1,7 +1,6 @@
 package net.hb.chatting.ddd;
 
 import java.awt.BorderLayout;
-import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FileDialog;
@@ -10,8 +9,6 @@ import java.awt.List;
 import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -38,7 +35,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 public class MClient extends JFrame implements ActionListener, Runnable {
@@ -56,10 +52,8 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 	JFrame jf = new JFrame("Messenger");
 	JTabbedPane jtp = new JTabbedPane();
 	TextArea ta_out = new TextArea(25, 1);
-	JButton jb_cl = new JButton(new ImageIcon(
-			"C:/Mtest/my3/Chatting_DDD/file.gif"));
-	JButton jb_send = new JButton(new ImageIcon(
-			"C:/Mtest/my3/Chatting_DDD/send.gif"));
+	JButton jb_cl = new JButton(new ImageIcon("C:/Mtest/my3/Chatting_DDD/file.gif"));
+	JButton jb_send = new JButton(new ImageIcon("C:/Mtest/my3/Chatting_DDD/send.gif"));
 	JButton jb_join = new JButton("Join");
 	List list = new List(23);
 	Map<String, Boolean> NameList = new HashMap<String, Boolean>();
@@ -80,7 +74,6 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 	public MClient() {
 		initializeWindow();
 		layoutCom();
-
 	}// end
 
 	public void layoutCom() {
@@ -88,19 +81,16 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 		this.jtp.addTab("All", jp11.add((TextArea) v.get(0)));
 		v.get(0).setBackground(new Color(178, 204, 255));
 		jtp.setPreferredSize(new Dimension(100, 425));
-
 		jp12.add(tf_name);
 		jp12.add(jb_join);
-		jp3.add(jb_cl); // 지우개
+		jp3.add(jb_cl); 
 		jp3.add(tf_msg);
-		jp3.add(jb_send); // 보내기
-
+		jp3.add(jb_send); 
 		jp4.add("Center", jtp);
 		border.setHgap(15);
 		jp4.add("West", list);
 		jp6.add("East", jp3);
 		jp6.add("West", jp12);
-
 		jf.setJMenuBar(mb);
 		jf.getContentPane().add("South", jp6);
 		jf.getContentPane().add("North", jp4);
@@ -121,7 +111,6 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 	}// layout end
 
 	public void initializeWindow() {
-
 		jf.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				exit();
@@ -131,11 +120,10 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 		MouseListener mouseListener = new MouseAdapter() {
 
 			public void mouseClicked(MouseEvent ae) {
-				
 
 				if (ae.getClickCount() == 2) {
 					nick = list.getSelectedItem().toString();
-							
+
 					if (!(NameList.get(nick))) { // New Create
 						v.add(new TextArea());
 						jtp.addTab(nick, new JPanel().add(v.get(num)));
@@ -153,8 +141,8 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 					if (i > 0)
 						jtp.remove(i);
 				}
-			}
-		};
+			} // end mouseClicked
+		}; // end Mouselistener
 
 		jp3.setBackground(Color.white);
 		jp4.setBackground(Color.white);
@@ -188,7 +176,6 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 			in.close();
 			out.close();
 			soc.close();
-			// setList();
 		} catch (Exception ex) {
 			System.out.println("보내기 오류 " + ex.getMessage());
 		}
@@ -204,8 +191,7 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 		FileDialog fd = new FileDialog(this, "save", FileDialog.SAVE);
 		fd.setVisible(true);
 		String dir = fd.getDirectory();
-		System.out.println("fd.getDirectory(): " + dir); // after selecting
-																											// file,show this line
+		System.out.println("fd.getDirectory(): " + dir); 
 		String file = fd.getFile();
 		if (dir == null || file == null)
 			return;
@@ -240,21 +226,7 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 		}
 	}// fileOpen end
 
-	public void setList() { // list 다시 초기화하는 함수
-		try {
-			for (int i = 0; i < 20; i++) {
-				if (list.getItem(i) != "") {
-					list.remove(i);
-					list.add("", i);
-					count--;
-				}
-			}
-		} catch (Exception e) {
-		}
-	}// end
-
-	public void showMsg(int i_Text, String msg, String ipAdress, String sender)
-			throws Exception {
+	public void showMsg(int i_Text, String msg, String ipAdress, String sender) throws Exception {
 
 		System.out.println("in showMSg");
 		System.out.println("ip adress : " + ipAdress);
@@ -268,22 +240,7 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 		String lastLineStr = null;
 		StringBuilder lastmodifyStr = null;
 		InetAddress selfIP = InetAddress.getLocalHost();
-		if(NameList.get(sender)==true){
-			jtp.setSelectedIndex(jtp.indexOfTab(sender));
-		}else{
-			jtp.addTab(sender,new JPanel().add(v.get(num)) );
-			num++;
-			isCreatedTab = true;
-			NameList.put(nick, isCreatedTab);
-			jtp.setSelectedIndex(jtp.indexOfTab(sender));
-		}
-		if (!(selfIP.getHostAddress().equals(ipAdress))) { // != left side == rigth
-			// side
-			// align left version
-			// *****************
-
-			// show msg not include lastline msg
-
+		if (!(selfIP.getHostAddress().equals(ipAdress))) {
 			v.get(i_Text).append(sender + "\n");
 			while (true) {
 				if (idx + lineMaxCnt >= str.length()) {
@@ -291,72 +248,53 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 				}
 				System.out.println("showMsg : while");
 				modifyStr = new StringBuilder(spaceStr);
-				modifyStr.append(str.substring(idx,Math.min(str.length(), (idx + lineMaxCnt))));
+				modifyStr.append(str.substring(idx,
+						Math.min(str.length(), (idx + lineMaxCnt))));
 				System.out.println(modifyStr.toString());
 				System.out.println("jinhee");
-				 v.get(i_Text).append(modifyStr.toString() + "\n");
+				v.get(i_Text).append(modifyStr.toString() + "\n");
 				idx += 15;
-//				if (idx + lineMaxCnt > str.length()) {
-//					break;
-//				}
-//				v.get(i_Text).append(modifyStr.toString() + "\n");
-			}
-			// pickup lastline msg
+			} // end while
 
-			if (str.length() !=15) {
+			if (str.length() != 15) {
 				lastLineStr = str.substring(str.length() - lastCharNum); // String
-			}else {
+			} else {
 				lastLineStr = str; // String
 			}
 			lastmodifyStr = new StringBuilder(spaceStr + lastLineStr);
 			for (int i = (lastLineStr).length(); i < lineMaxCnt; i++) {
 				lastmodifyStr.append(" ");
 			}
-			// lastmodifyStr.append("  "+time);
 			System.out.println(lastmodifyStr.toString() + "    " + time);
 			v.get(i_Text).append(lastmodifyStr.toString() + "\t" + time + "\n\n\n");
-			// ************* align left version end *************
-
 		} else {
-			// align right version
-			// ***************************
-
 			String spaceForRight = " ";
 			int spaceCnt = 75;
-			// space
 			StringBuilder sbSpace4Right;
-
-			// show msg not include lastline msg
 			idx = 0;
 			while (true) {
 				System.out.println("right side while ");
-				if (idx + lineMaxCnt >=str.length() ) {
+				if (idx + lineMaxCnt >= str.length()) {
 					break;
 				}
 				sbSpace4Right = new StringBuilder(spaceForRight);
 				for (int i = 0; i < spaceCnt; i++) {
 					sbSpace4Right.append(spaceForRight);
 				}
-				sbSpace4Right.append(str.substring(idx,Math.min(str.length(), (idx + lineMaxCnt))));
+				sbSpace4Right.append(str.substring(idx,
+						Math.min(str.length(), (idx + lineMaxCnt))));
 				System.out.println(sbSpace4Right.toString());
 				v.get(i_Text).append(sbSpace4Right.toString() + "\n");
 				idx += 15;
-//				if (idx + lineMaxCnt > str.length()) {
-//					break;
-//				}
-//				v.get(i_Text).append(sbSpace4Right.toString() + "\n");
 			}// end while
 			System.out.println("from last line ");
-			// pickup lastline msg
-			lastLineStr = null; // String
-			if (str.length() !=15) {
-				lastLineStr = str.substring(str.length() - lastCharNum); // String
-			}else {
-				lastLineStr = str; // String
+			lastLineStr = null; 
+			if (str.length() != 15) {
+				lastLineStr = str.substring(str.length() - lastCharNum); 
+			} else {
+				lastLineStr = str; 
 			}
-//			lastLineStr = str.substring(str.length() - lastCharNum); // String
-			lastmodifyStr = new StringBuilder(spaceStr + lastLineStr); // StringBuilder
-
+			lastmodifyStr = new StringBuilder(spaceStr + lastLineStr); 
 			sbSpace4Right = new StringBuilder(spaceForRight);
 			for (int i = 0; i < spaceCnt - time.length() - 7; i++) {
 				sbSpace4Right.append(spaceForRight);
@@ -365,61 +303,37 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 			v.get(i_Text).append(
 					sbSpace4Right.toString() + time + "  " + lastLineStr + "\n\n\n");
 			System.out.println(v.get(i_Text).getWidth());
-			// ************* align right version end *************
-		}
-
+		} // end if~else
 	}// end showMsg
 
 	public void run() {
 		String[] receivedStr;
 		System.out.println("in run method");
-
 		while (true) {
-
 			try {
 				String msg = in.readLine();
 				System.out.println("get msg from server : " + msg);
-
-				// for (int i = 0; i < 20; i++) {
-				// System.out.println(((java.util.List<JTextArea>) list).get(i));
-				//
-				// }
 				if (msg.charAt(0) == '/') {
 					if (msg.charAt(1) == 'c') {
 						if (!(NameList.containsKey(msg.substring(2)))) {
-							list.replaceItem(msg.substring(2), count);	
+							list.replaceItem(msg.substring(2), count);
 							count++;
 							NameList.put(msg.substring(2), isCreatedTab);
 						}
-						
 					}
 				}
-				System.out.println("before i : ");
 				int i = jtp.getSelectedIndex();
-				System.out.println("after i : ");
-				// v.get(i).append("****" + msg.substring(2) + "님이 입장하셨습니다****\r\n");
-				// tf_name.setEnabled(false); // 대화명 label 비활성
 				jb_join.setEnabled(false);
 				receivedStr = msg.split("::");
-//				System.out.println("receivedStr[3]" + receivedStr[3]);
-				System.out.println("receivedStr[2]" + receivedStr[2]);
-				System.out.println("receivedStr[1]" + receivedStr[1]);
-				System.out.println("receivedStr[0]" + receivedStr[0]);
-				showMsg(i, receivedStr[1], receivedStr[0], receivedStr[2]);// tab idx ,
-																															// str
-				// System.out.println("111");
-
+				showMsg(i, receivedStr[1], receivedStr[0], receivedStr[2]);
 				if (msg == null) {
 					NameList.put(msg.substring(2), isCreatedTab);
-
 					return;
 				}
-				
 			} catch (Exception e) {
 				ta_out.append(e.getMessage());
 			}
-		}
-
+		}// end while
 	}// run end
 
 	public void actionPerformed(ActionEvent e) {
@@ -430,7 +344,6 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 				in.close();
 				out.close();
 				soc.close();
-				setList();
 			} catch (Exception ex) {
 				System.out.println("보내기 오류 " + ex.getMessage());
 			}
@@ -455,48 +368,34 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 	}// actionPerformed end
 
 	public void sendProcess() {
-
 		InetAddress selfIP;
 		String str = tf_msg.getText();
-		System.out.println("send process str : " + str);
 		try {
 			if (str.charAt(0) == 'q') {
 				out.write(("/q" + tf_name.getText() + "\n").getBytes());
-
 				System.out.println("서버로 보냄 >> " + tf_name.getText() + " \n");
 				in.close();
 				out.close();
 				soc.close();
 				System.exit(0);
 			}
-
 			selfIP = InetAddress.getLocalHost();
 			String userName = tf_name.getText();
-
 			System.out.println("send process: " + selfIP.getHostAddress());
 			str = selfIP.getHostAddress() + "::" + str + "::" + userName;
-
 			int i = jtp.getSelectedIndex();
-
 			now = Calendar.getInstance();
 			hh = now.get(now.HOUR_OF_DAY);
 			mm = now.get(now.MINUTE);
 			ss = now.get(now.SECOND);
 			time = hh + ":" + mm + ":" + ss;
-
-			// v.get(i).append(tf_msg.getText() + "\n");
 			tf_msg.setText("");
 			tf_msg.requestFocus();
-
 		} catch (Exception e) {
 			ta_out.append(e.getMessage());
 		}
-
-		System.out.println("before send msg : " + str);
 		PrintWriter pw = new PrintWriter(out, true);
-		pw.println(str); // send to server msg
-
-		// showMsg(i, str, time);
+		pw.println(str); 
 		tf_msg.setText("");
 		tf_msg.requestFocus();
 		try {
@@ -505,28 +404,24 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 			ta_out.append(e.getMessage());
 		}
 
-	}// end
+	}// end sendProcess
 
-	public void connect() { // 대화명을 서버로 보내서 접속자에 등록.
+	public void connect() { 
 		System.out.println("connect");
 		ta_out.setEnabled(true);
 		tf_msg.setEnabled(true);
 		try {
-			soc = new Socket("203.236.209.120", 8000); // 소켓지정
+			soc = new Socket("203.236.209.120", 8000); 
 			in = new BufferedReader(new InputStreamReader(soc.getInputStream()));
-			out = soc.getOutputStream(); // 서버로 보냄
-			out.write(("/c" + tf_name.getText() + "\n").getBytes()); // 접속자 대화명을
-																																// 바이트로해서 서버에
-			// 보냄
+			out = soc.getOutputStream(); 
+			out.write(("/c" + tf_name.getText() + "\n").getBytes()); 
 			System.out.println("send to server >> " + tf_name.getText());
-			// tf_name.setEnabled(false);
-			// jb_join.setEnabled(false);
-			new Thread(this).start(); // 다른 클라이언트들의 메시지를 서버로부터 가져옴
+			new Thread(this).start(); 
 			tf_msg.requestFocus();
 		} catch (Exception e) {
 			ta_out.append(e.getMessage());
-		} // 소켓에서 발생한 예외오류메시지를 출력하는듯...
-	}// end
+		} 
+	}// end connect
 
 	public static void main(String[] args) {
 		System.out.println("main 시작");
