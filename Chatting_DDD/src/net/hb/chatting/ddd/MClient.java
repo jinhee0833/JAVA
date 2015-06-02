@@ -52,7 +52,7 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 	JPanel jp12 = new JPanel();
 	JTextField tf_name = new JTextField(10);
 	JTextField tf_msg = new JTextField(30);
-	Vector<JTextArea> v = new Vector<JTextArea>();
+	Vector<TextArea> v = new Vector<TextArea>();
 	JFrame jf = new JFrame("Messenger");
 	JTabbedPane jtp = new JTabbedPane();
 	TextArea ta_out = new TextArea(25, 1);
@@ -83,8 +83,8 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 	}// end
 
 	public void layoutCom() {
-		v.add(new JTextArea());
-		this.jtp.addTab("All", jp11.add((JTextArea) v.get(0)));
+		v.add(new TextArea());
+		this.jtp.addTab("All", jp11.add((TextArea) v.get(0)));
 		v.get(0).setBackground(new Color(178, 204, 255));
 		jtp.setPreferredSize(new Dimension(100, 425));
 
@@ -111,7 +111,7 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 		mfile.addSeparator();
 		mfile.add(mexit);
 		for (int i = 0; i < 20; i++)
-			list.add("");
+			list.add(" ");
 		list.setBackground(new Color(255, 167, 167));
 		jf.pack();
 		jf.setLocationRelativeTo(null);
@@ -135,7 +135,7 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 				if (ae.getClickCount() == 2) {
 
 					if (!(NameList.get(nick))) { // New Create
-						v.add(new JTextArea());
+						v.add(new TextArea());
 						jtp.addTab(nick, new JPanel().add(v.get(num)));
 						v.get(num).setBackground(new Color(178, 204, 255));
 						num++;
@@ -275,17 +275,20 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 
 			v.get(i_Text).append(sender + "\n");
 			while (true) {
-				System.out.println("showMsg : while");
-				modifyStr = new StringBuilder(spaceStr);
-				modifyStr.append(str.substring(idx,
-						Math.min(str.length(), (idx + lineMaxCnt))));
-				System.out.println(modifyStr.toString());
-				// v.get(i_Text).append(modifyStr.toString() + "\n");
-				idx += 10;
 				if (idx + lineMaxCnt > str.length()) {
 					break;
 				}
-				v.get(i_Text).append(modifyStr.toString() + "\n");
+				System.out.println("showMsg : while");
+				modifyStr = new StringBuilder(spaceStr);
+				modifyStr.append(str.substring(idx,Math.min(str.length(), (idx + lineMaxCnt))));
+				System.out.println(modifyStr.toString());
+				System.out.println("jinhee");
+				 v.get(i_Text).append(modifyStr.toString() + "\n");
+				idx += 15;
+//				if (idx + lineMaxCnt > str.length()) {
+//					break;
+//				}
+//				v.get(i_Text).append(modifyStr.toString() + "\n");
 			}
 			// pickup lastline msg
 
@@ -296,8 +299,7 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 			}
 			// lastmodifyStr.append("  "+time);
 			System.out.println(lastmodifyStr.toString() + "    " + time);
-			v.get(i_Text)
-					.append(lastmodifyStr.toString() + "     " + time + "\n\n\n");
+			v.get(i_Text).append(lastmodifyStr.toString() + "\t\t" + time + "\n\n\n");
 			// ************* align left version end *************
 
 		} else {
@@ -312,23 +314,31 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 			// show msg not include lastline msg
 			idx = 0;
 			while (true) {
+				System.out.println("right side while ");
+				if (idx + lineMaxCnt > str.length() ) {
+					break;
+				}
 				sbSpace4Right = new StringBuilder(spaceForRight);
 				for (int i = 0; i < spaceCnt; i++) {
 					sbSpace4Right.append(spaceForRight);
 				}
-				sbSpace4Right.append(str.substring(idx,
-						Math.min(str.length(), (idx + lineMaxCnt))));
+				sbSpace4Right.append(str.substring(idx,Math.min(str.length(), (idx + lineMaxCnt))));
 				System.out.println(sbSpace4Right.toString());
-
-				idx += 10;
-				if (idx + lineMaxCnt > str.length()) {
-					break;
-				}
 				v.get(i_Text).append(sbSpace4Right.toString() + "\n");
+				idx += 15;
+//				if (idx + lineMaxCnt > str.length()) {
+//					break;
+//				}
+//				v.get(i_Text).append(sbSpace4Right.toString() + "\n");
 			}// end while
-
+			System.out.println("from last line ");
 			// pickup lastline msg
 			lastLineStr = null; // String
+			if (str.length() !=15) {
+				lastLineStr = str.substring(str.length() - lastCharNum); // String
+			}else {
+				lastLineStr = str; // String
+			}
 			lastLineStr = str.substring(str.length() - lastCharNum); // String
 			lastmodifyStr = new StringBuilder(spaceStr + lastLineStr); // StringBuilder
 
