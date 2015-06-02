@@ -75,6 +75,7 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 	OutputStream out;
 	BufferedReader in;
 	Socket soc;
+	String nick = null;
 
 	public MClient() {
 		initializeWindow();
@@ -130,7 +131,7 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 		MouseListener mouseListener = new MouseAdapter() {
 
 			public void mouseClicked(MouseEvent ae) {
-				String nick = list.getSelectedItem().toString();
+				
 
 				if (ae.getClickCount() == 2) {
 
@@ -377,7 +378,7 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 					if (msg.charAt(1) == 'c') {
 						if (!(NameList.containsKey(msg.substring(2)))) {
 							list.replaceItem(msg.substring(2), count);
-
+							nick = list.getSelectedItem().toString();
 							count++;
 							NameList.put(msg.substring(2), isCreatedTab);
 						}
@@ -391,10 +392,12 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 				// tf_name.setEnabled(false); // 대화명 label 비활성
 				jb_join.setEnabled(false);
 				receivedStr = msg.split("::");
+				System.out.println("receivedStr[3]" + receivedStr[3]);
+				System.out.println("receivedStr[2]" + receivedStr[2]);
 				System.out.println("receivedStr[1]" + receivedStr[1]);
 				System.out.println("receivedStr[0]" + receivedStr[0]);
 				showMsg(i, receivedStr[1], receivedStr[0], receivedStr[2]);// tab idx ,
-																																		// str
+																															// str
 				// System.out.println("111");
 
 				if (msg == null) {
@@ -402,7 +405,7 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 
 					return;
 				}
-				count++;
+				
 			} catch (Exception e) {
 				ta_out.append(e.getMessage());
 			}
@@ -462,7 +465,7 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 			String userName = tf_name.getText();
 
 			System.out.println("send process: " + selfIP.getHostAddress());
-			str = selfIP.getHostAddress() + "::" + str + "::" + userName;
+			str = selfIP.getHostAddress() + "::" + str + "::" + userName+ "::" + jtp.getTitleAt(jtp.indexOfTab(nick));
 
 			int i = jtp.getSelectedIndex();
 
