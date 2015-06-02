@@ -275,7 +275,7 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 
 			v.get(i_Text).append(sender + "\n");
 			while (true) {
-				if (idx + lineMaxCnt > str.length()) {
+				if (idx + lineMaxCnt >= str.length()) {
 					break;
 				}
 				System.out.println("showMsg : while");
@@ -292,14 +292,18 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 			}
 			// pickup lastline msg
 
-			lastLineStr = str.substring(str.length() - lastCharNum);
+			if (str.length() !=15) {
+				lastLineStr = str.substring(str.length() - lastCharNum); // String
+			}else {
+				lastLineStr = str; // String
+			}
 			lastmodifyStr = new StringBuilder(spaceStr + lastLineStr);
 			for (int i = (lastLineStr).length(); i < lineMaxCnt; i++) {
 				lastmodifyStr.append(" ");
 			}
 			// lastmodifyStr.append("  "+time);
 			System.out.println(lastmodifyStr.toString() + "    " + time);
-			v.get(i_Text).append(lastmodifyStr.toString() + "\t\t" + time + "\n\n\n");
+			v.get(i_Text).append(lastmodifyStr.toString() + "\t" + time + "\n\n\n");
 			// ************* align left version end *************
 
 		} else {
@@ -315,7 +319,7 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 			idx = 0;
 			while (true) {
 				System.out.println("right side while ");
-				if (idx + lineMaxCnt > str.length() ) {
+				if (idx + lineMaxCnt >=str.length() ) {
 					break;
 				}
 				sbSpace4Right = new StringBuilder(spaceForRight);
@@ -339,7 +343,7 @@ public class MClient extends JFrame implements ActionListener, Runnable {
 			}else {
 				lastLineStr = str; // String
 			}
-			lastLineStr = str.substring(str.length() - lastCharNum); // String
+//			lastLineStr = str.substring(str.length() - lastCharNum); // String
 			lastmodifyStr = new StringBuilder(spaceStr + lastLineStr); // StringBuilder
 
 			sbSpace4Right = new StringBuilder(spaceForRight);
